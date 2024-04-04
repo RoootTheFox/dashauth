@@ -25,7 +25,6 @@ namespace dashauth {
             return;
         }
 
-        // todo: new thread !!!
         auto account_manager = GJAccountManager::sharedState();
 
         std::thread request_thread([this, account_manager] {
