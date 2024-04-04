@@ -1,3 +1,3 @@
 # DashAuth
 
-This is where she makes a mod.
+A work-in-progress mod that aims to make developers' lives easier for implementing GD message based authentication.
