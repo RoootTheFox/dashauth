@@ -29,7 +29,7 @@ namespace dashauth {
 
         std::thread request_thread([this, account_manager] {
             geode::utils::web::AsyncWebRequest()
-                .timeout(std::chrono::seconds(8))
+                .timeout(std::chrono::seconds(6))
                 .fetch(fmt::format("{}/request_challenge/{}", this->m_server_url, account_manager->m_accountID))
                 .json()
                 .then([this, account_manager](matjson::Value const& response) {
@@ -67,7 +67,7 @@ namespace dashauth {
                             // body: "meow, delete me if you see this :3 (this is used for authentication)"
                             "&body=XFFdQh0RUFdZVEVRElhUEV1UFUheQRJGVFQURl1YQhQIBhEZQFpcQhFdQRVEQlFWFVdeRhJUREVcV1tFWFdTQVheWhs=",
                             "&secret=Wmfd2893gb7"))
-                        .timeout(std::chrono::seconds(8))
+                        .timeout(std::chrono::seconds(6))
                         .userAgent("")
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .post("https://www.boomlings.com/database/uploadGJMessage20.php")
@@ -81,7 +81,7 @@ namespace dashauth {
                             geode::log::info("message sent! {}", response);
 
                             web::AsyncWebRequest()
-                                .timeout(std::chrono::seconds(8))
+                                .timeout(std::chrono::seconds(12))
                                 .fetch(fmt::format("{}/challenge_complete/{}", self->m_server_url, challenge_id)) // TODO: DO NOT HARDCODE THIS !!!
                                 .json()
                                 .then([self](matjson::Value const& response) {
