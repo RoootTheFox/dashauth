@@ -31,7 +31,10 @@ namespace dashauth {
         std::thread request_thread([this, account_manager] {
             auto challenge_response = geode::utils::web::fetch(fmt::format("{}/request_challenge/{}", this->m_server_url, account_manager->m_accountID));
             if (!challenge_response) {
-                // todo: call except
+                geode::Loader::get()->queueInMainThread([this] {
+                    this->m_except_callback();
+                });
+                return;
             }
             
             auto response = matjson::parse(challenge_response.value());
@@ -98,14 +101,16 @@ namespace dashauth {
                             // this is safe because this runs on the gd thread
                             self->m_then_callback(token);
                         })
-                        .expect([](std::string const& error) {
-                            // todo: call except
+                        .expect([self](std::string const& error) {
                             log::error("failed to get api access token :( {}", error);
+                            self->m_except_callback();
+                            return;
                         });
                     })
                     .expect([self](std::string const& error) {
-                        // todo: call except
                         log::error("i am crying and sobbing rn {}", error);
+                        self->m_except_callback();
+                        return;
                     });
         });
         request_thread.detach();
