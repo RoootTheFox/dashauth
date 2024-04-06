@@ -74,8 +74,9 @@ namespace dashauth {
                         .text()
                         .then([self, challenge_id](std::string const& response) {
                             if (response == "-1") {
-                                geode::log::error("fuck");
-                                self->m_except_callback();
+                                auto message = "failed to send gd message";
+                                log::error("{}", message);
+                                self->m_except_callback(message);
                                 return;
                             }
                             geode::log::info("message sent! {}", response);
@@ -99,19 +100,22 @@ namespace dashauth {
                                     self->m_then_callback(token);
                                 })
                                 .expect([self](std::string const& error) {
-                                    log::error("failed to get api access token :( {}", error);
-                                    self->m_except_callback();
+                                    auto message = fmt::format("failed to get api access token :( {}", error);
+                                    log::error("{}", message);
+                                    self->m_except_callback(message);
                                     return;
                                 });
                             })
                             .expect([self](std::string const& error) {
-                                log::error("i am crying and sobbing rn {}", error);
-                                self->m_except_callback();
+                                auto message = fmt::format("failed to send gd message: {}", error);
+                                log::error("{}", message);
+                                self->m_except_callback(message);
                                 return;
                             });
                 }).expect([this](std::string const& error) {
-                    geode::log::error("failed to get challenge :( {}", error);
-                    this->m_except_callback();
+                    auto message = fmt::format("failed to get challenge: {}", error);
+                    log::error("{}", message);
+                    this->m_except_callback(message);
                     return;
                 });
         });
@@ -119,7 +123,7 @@ namespace dashauth {
     }
 
     [[nodiscard]]
-    SentDashAuthRequest* SentDashAuthRequest::except(std::function<void()> callback) {
+    SentDashAuthRequest* SentDashAuthRequest::except(std::function<void(std::string const&)> callback) {
         this->m_except_callback = callback;
         return this;
     }

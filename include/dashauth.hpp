@@ -22,13 +22,13 @@ namespace dashauth {
         ~SentDashAuthRequest();
         void then(std::function<void(std::string const&)>);
         [[nodiscard]]
-        SentDashAuthRequest* except(std::function<void()>);
+        SentDashAuthRequest* except(std::function<void(std::string const&)>);
 
         void initialize(geode::Mod* mod, std::string server_url);
         private:
 
         std::function<void(std::string const&)> m_then_callback;
-        std::function<void()> m_except_callback;
+        std::function<void(std::string const&)> m_except_callback;
         geode::Mod* m_mod;
         std::string m_server_url;
     };
