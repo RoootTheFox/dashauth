@@ -74,8 +74,8 @@ namespace dashauth {
                         .text()
                         .then([self, challenge_id](std::string const& response) {
                             if (response == "-1") {
-                                // TODO: call except
                                 geode::log::error("fuck");
+                                self->m_except_callback();
                                 return;
                             }
                             geode::log::info("message sent! {}", response);
