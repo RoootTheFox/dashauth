@@ -12,7 +12,7 @@ namespace dashauth {
             geode::log::info("what are you doing");
         };
         ~SentDashAuthRequest() {};
-        void then(std::function<void(std::string const&)>) {
+        void then(std::function<void(std::string const&)> callback) {
             this->m_then_callback = callback;
 
             // then is also responsible for calling the callback
@@ -123,7 +123,7 @@ namespace dashauth {
         };
 
         [[nodiscard]]
-        SentDashAuthRequest* except(std::function<void(std::string const&)>) {
+        SentDashAuthRequest* except(std::function<void(std::string const&)> callback) {
             this->m_except_callback = callback;
             return this;
         }
