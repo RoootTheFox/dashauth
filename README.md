@@ -1,11 +1,11 @@
 # DashAuth
 
-A work-in-progress mod that aims to make developers' lives easier for implementing GD message based authentication.
+A work-in-progress header-only library that aims to make developers' lives easier for implementing GD message based authentication.
 
 example usage:
 ```c++
 #include <Geode/Geode.hpp>
-#include <rooot.dashauth/include/dashauth.hpp>
+#include <dashauth.hpp>
 
 using namespace geode::prelude;
 
@@ -35,7 +35,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 	}
 
 	void onMyButton(CCObject*) {
-		DashAuthRequest().getToken(Mod::get(), "http://localhost:61475/api/v1")->except([]() {
+		DashAuthRequest().getToken(Mod::get(), "http://your-api-url-here.tld/api/v1")->except([]() {
 			log::info("failed to get token :c");
 			FLAlertLayer::create("DashAuth Error", "Failed to get token. why? idfk lmfao", "OK")->show();
 		})->then([](std::string const& token) {
@@ -44,4 +44,10 @@ class $modify(MyMenuLayer, MenuLayer) {
 		});
 	}
 };
+```
+
+including in your mod is very simple too:
+```cmake
+CPMAddPackage("gh:RoootTheFox/dashauth#main")
+target_link_libraries(${PROJECT_NAME} DashAuth)
 ```
