@@ -3,7 +3,8 @@
 	"gd": {
 		"win": "2.204",
 		"android": "2.205",
-		"mac": "2.200"
+		"mac": "2.200",
+		"ios": "2.205"
 	},
 	"version": "v0.0.2",
 	"id": "rooot.dashauth",
