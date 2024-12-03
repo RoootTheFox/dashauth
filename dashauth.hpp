@@ -53,7 +53,7 @@ namespace dashauth {
 
                                 auto json = value->json();
                                 if (!json.isOk()) {
-                                    auto message = fmt::format("failed to get challenge: {}", json.error());
+                                    auto message = fmt::format("failed to get challenge: {}", json.err());
                                     log::error("{}", message);
                                     this->m_except_callback(message);
                                     return;
@@ -61,14 +61,14 @@ namespace dashauth {
                                 auto response = json.unwrap();
 
                                 // my own servers are non-spec compliant lmao
-                                if (response.contains("success") && response["success"].as_bool()) {
-                                    this->m_state_account_id = response["data"]["bot_account_id"].as_int();
-                                    m_state_challenge = response["data"]["challenge"].as_string();
-                                    m_state_challenge_id = response["data"]["id"].as_string();
+                                if (response.contains("success") && response["success"].asBool().unwrapOr(false)) {
+                                    this->m_state_account_id = response["data"]["bot_account_id"].as<int>().unwrapOr(0);
+                                    m_state_challenge = response["data"]["challenge"].asString().unwrapOr("");
+                                    m_state_challenge_id = response["data"]["id"].asString().unwrapOr("");
                                 } else {
-                                    m_state_account_id = response["bot_account_id"].as_int();
-                                    m_state_challenge = response["challenge"].as_string();
-                                    m_state_challenge_id = response["id"].as_string();
+                                    m_state_account_id = response["bot_account_id"].as<int>().unwrapOr(0);
+                                    m_state_challenge = response["challenge"].asString().unwrapOr("");
+                                    m_state_challenge_id = response["id"].asString().unwrapOr("");
                                 }
 
                                 // send private message to bot account
@@ -99,7 +99,7 @@ namespace dashauth {
                             case SENDING_MESSAGE: {
                                 auto text = value->string();
                                 if (!text.isOk()) {
-                                    auto message = fmt::format("failed to send gd message: {}", text.error());
+                                    auto message = fmt::format("failed to send gd message: {}", text.err());
                                     log::error("{}", message);
                                     this->m_except_callback(message);
                                     return;
@@ -124,7 +124,7 @@ namespace dashauth {
                             case GETTING_TOKEN: {
                                 auto json = value->json();
                                 if (!json.isOk()) {
-                                    auto message = fmt::format("failed to get challenge: {}", json.error());
+                                    auto message = fmt::format("failed to get challenge: {}", json.err());
                                     log::error("{}", message);
                                     this->m_except_callback(message);
                                     return;
@@ -134,8 +134,8 @@ namespace dashauth {
                                 log::info("GOT API ACCESS TOKEN (REAL) (NOT FAKE): {}", response);
 
                                 std::string token = "";
-                                if (response.contains("success") && response["success"].as_bool()) {
-                                    token = response["data"].as_string();
+                                if (response.contains("success") && response["success"].asBool()) {
+                                    token = response["data"].asString().unwrapOr("");
                                 } else {
                                     token = "uh oh";
                                 }
@@ -161,7 +161,7 @@ namespace dashauth {
                             case DONE_GETTING_SENT_MESSAGES: {
                                 auto text = value->string();
                                 if (!text.isOk()) {
-                                    log::error("failed to get gd messages: {}", text.error());
+                                    log::error("failed to get gd messages: {}", text.err());
                                     return;
                                 }
 
